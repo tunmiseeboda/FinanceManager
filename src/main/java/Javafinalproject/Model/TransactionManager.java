@@ -1,11 +1,9 @@
 package Javafinalproject.Model;
 
-import Javafinalproject.Model.Transaction;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Collections;
 
 public class TransactionManager {
 
@@ -49,7 +47,20 @@ public class TransactionManager {
 
     // Method to sort transactions by category
     public static void sortByCategory(List<Transaction> transactions) {
+        Collections.sort(transactions, new Comparator<Transaction>() {
+            @Override
+            public int compare(Transaction t1, Transaction t2) {
+                // Compare categories
+                int categoryComparison = t1.getCategory().compareToIgnoreCase(t2.getCategory());
 
+                // If categories are the same, sort alphabetically within the category
+                if (categoryComparison == 0) {
+                    return t1.getDescription().compareTo(t2.getDescription());
+                } else {
+                    return categoryComparison;
+                }
+            }
+        });
     }
 
     //Method to Search transactions by keyword, category, date or amount
