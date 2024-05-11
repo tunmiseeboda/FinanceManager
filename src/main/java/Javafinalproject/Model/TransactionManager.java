@@ -3,6 +3,7 @@ package Javafinalproject.Model;
 import Javafinalproject.Model.Transaction;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Collections;
 
@@ -10,7 +11,35 @@ public class TransactionManager {
 
     // Method to sort transactions by date
     public static void sortByDate(List<Transaction> transactions) {
-        Collections.sort(transactions, (t1, t2) -> t1.getDate().compareTo(t2.getDate()));
+        Collections.sort(transactions, new Comparator<Transaction>() {
+            @Override
+            public int compare(Transaction t1, Transaction t2) {
+                String[] parts1 = t1.getDate().split("/");
+                String[] parts2 = t2.getDate().split("/");
+
+                // Extract month, day, year
+                int month1 = Integer.parseInt(parts1[0]);
+                int day1 = Integer.parseInt(parts1[1]);
+                int year1 = Integer.parseInt(parts1[2]);
+
+                int month2 = Integer.parseInt(parts2[0]);
+                int day2 = Integer.parseInt(parts2[1]);
+                int year2 = Integer.parseInt(parts2[2]);
+
+                // Compare years
+                if (year1 != year2) {
+                    return Integer.compare(year1, year2);
+                }
+
+                // Compare months
+                if (month1 != month2) {
+                    return Integer.compare(month1, month2);
+                }
+
+                // Compare days
+                return Integer.compare(day1, day2);
+            }
+        });
     }
 
     // Method to sort transactions by amount
@@ -20,7 +49,7 @@ public class TransactionManager {
 
     // Method to sort transactions by category
     public static void sortByCategory(List<Transaction> transactions) {
-        Collections.sort(transactions, (t1, t2) -> t1.getCategory().compareTo(t2.getCategory()));
+
     }
 
     //Method to Search transactions by keyword, category, date or amount

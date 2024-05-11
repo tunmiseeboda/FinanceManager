@@ -52,8 +52,7 @@ public class Transaction {
     // toString
     @Override
     public String toString() {
-        return "Transaction[ " +
-                "amount=" + amount + ", category=" + category + ", description=" + description + ", date="
-                + date + "]";
+        return category + "\n" + amount + "\n" + description + "\n" + date+ "\n" ;
+
     }
 }
