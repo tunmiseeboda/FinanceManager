@@ -13,4 +13,6 @@ module com.example.javafinalproject {
 
     opens Javafinalproject to javafx.fxml;
     exports Javafinalproject;
+    exports Javafinalproject.Model;
+    opens Javafinalproject.Model to javafx.fxml;
 }

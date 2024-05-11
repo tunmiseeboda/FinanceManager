@@ -1,4 +1,4 @@
-package Javafinalproject;
+package Javafinalproject.Model;
 
 public class Transaction {
     // instance variables

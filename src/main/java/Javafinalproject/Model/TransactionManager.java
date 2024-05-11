@@ -1,4 +1,6 @@
-package Javafinalproject;
+package Javafinalproject.Model;
+
+import Javafinalproject.Model.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
