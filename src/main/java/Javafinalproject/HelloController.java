@@ -1,4 +1,4 @@
-package com.example.javafinalproject;
+package Javafinalproject;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -10,5 +10,6 @@ public class HelloController {
     @FXML
     protected void onHelloButtonClick() {
         welcomeText.setText("Welcome to your Personal Finance Manager");
+
     }
 }
