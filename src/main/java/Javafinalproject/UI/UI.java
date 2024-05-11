@@ -9,7 +9,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 import java.util.List;
@@ -111,13 +110,18 @@ public class UI {
     }
 
    private void updateTransactionListView(List<Transaction> transactions){
-       // clear and update the list view with transaction descriptions
+       // clear and update the list view with transaction details
        transactionListView.getItems().clear();
        for(Transaction transaction: transactions) {
            transactionListView.getItems().add(transaction.toString());
 
        }
    }
+
+    // Method to reload transactions from file
+    public void reloadTransactionsFromFile() {
+        loadTransactionsFromFile(fileInputUI.getFileName());
+    }
 
     public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
