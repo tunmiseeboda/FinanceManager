@@ -17,18 +17,18 @@ import java.util.List;
 public class UI {
     private VBox layout;
     private ObservableList<Transaction> transactions;
-    private ObservableList<Transaction> searchResults;
+
     private  FileInputUI fileInputUI;
     private ListView<String> transactionListView;
     private  ComboBox<String> sortOptions;
     private  ComboBox<String> orderOptions;
-    private TextField searchField;
+    private SearchField searchField;
 
    public UI() {
 
        // Initialize transactions list
        transactions = FXCollections.observableArrayList();
-       searchResults = FXCollections.observableArrayList();
+
 
        // Initialize file input UI
        fileInputUI = new FileInputUI();
@@ -51,8 +51,7 @@ public class UI {
        orderOptions.setOnAction(event -> sortTransactions());
 
        // Initialize Search field
-       searchField = new TextField();
-       searchField.setPromptText("Search....");
+       searchField = new SearchField(this::searchTransactions);
 
       // Initialize load Button
        Button loadButton = new Button("Load Transactions");
@@ -63,7 +62,7 @@ public class UI {
 
 
        // Add file input UI and transaction list view to layout
-       layout = new VBox(10, fileInputUI, sortOptions, orderOptions, loadButton, transactionListView, newTransactionForm);
+       layout = new VBox(10, fileInputUI, sortOptions, orderOptions, searchField, loadButton, transactionListView, newTransactionForm);
    }
 
    private void sortTransactions() {
@@ -84,9 +83,12 @@ public class UI {
    }
 
    private void searchTransactions(String keyword) {
-       searchResults.clear();
        // Call the searchTransactions method from TransactionManager class
        List<Transaction> searchResults = TransactionManager.searchTransactions(transactions, keyword);
+       transactions.clear();
+       transactions.addAll(searchResults);
+       // Update transaction list view with search results
+       updateTransactionListView();
    }
 
    private void loadTransactionsFromFile(String fileName) {
@@ -104,8 +106,11 @@ public class UI {
         sortTransactions();
     }
 
+    private void updateTransactionListView(){
+       updateTransactionListView(transactions);
+    }
 
-   private void updateTransactionListView(){
+   private void updateTransactionListView(List<Transaction> transactions){
        // clear and update the list view with transaction descriptions
        transactionListView.getItems().clear();
        for(Transaction transaction: transactions) {
