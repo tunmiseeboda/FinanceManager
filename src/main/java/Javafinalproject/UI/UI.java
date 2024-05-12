@@ -1,17 +1,21 @@
 package Javafinalproject.UI;
 
-
+import javafx.application.Platform;
 import Javafinalproject.Model.FileManager;
 import Javafinalproject.Model.Transaction;
 import Javafinalproject.Model.TransactionManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
 
 import java.util.List;
+import java.util.concurrent.Executors;
 
 public class UI {
     private VBox layout;
@@ -22,6 +26,8 @@ public class UI {
     private  ComboBox<String> sortOptions;
     private  ComboBox<String> orderOptions;
     private SearchField searchField;
+
+    private ExecutorService executor = Executors.newCachedThreadPool();
 
    public UI() {
 
@@ -56,12 +62,15 @@ public class UI {
        Button loadButton = new Button("Load Transactions");
        loadButton.setOnAction(event -> loadTransactionsFromFile(fileInputUI.getFileName()));
 
+       Button exportButton = new Button("Export Transactions");
+       exportButton.setOnAction(event -> exportTransactionToFile());
+
        // Initialize NewTransactionForm
        NewTransactionForm newTransactionForm = new NewTransactionForm(this::addTransaction);
 
 
        // Add file input UI and transaction list view to layout
-       layout = new VBox(10, fileInputUI, sortOptions, orderOptions, searchField, loadButton, transactionListView, newTransactionForm);
+       layout = new VBox(10, fileInputUI, sortOptions, orderOptions, searchField, loadButton, transactionListView, newTransactionForm, exportButton);
    }
 
    private void sortTransactions() {
@@ -91,12 +100,16 @@ public class UI {
    }
 
    private void loadTransactionsFromFile(String fileName) {
-       // Call FileManger method to load transactions from file
-       List<Transaction> loadedTransactions = FileManager.loadTransactions(fileName);
-       // Update transactions list and list view
-       transactions.clear();
-       transactions.addAll(loadedTransactions);
-       sortTransactions();
+       executor.submit(() -> {
+           // Call FileManger method to load transactions from file
+           List<Transaction> loadedTransactions = FileManager.loadTransactions(fileName);
+           Platform.runLater(()->{
+               // Update transactions list and list view
+               transactions.clear();
+               transactions.addAll(loadedTransactions);
+               sortTransactions();
+           });
+       });
    }
     public void updateTransactions(List<Transaction> updatedTransactions) {
         // Clear and update the transactions list
@@ -117,6 +130,20 @@ public class UI {
 
        }
    }
+
+   private void exportTransactionToFile() {
+       TransactionIOHandler.exportTransactions(transactions);
+       showExportConfirmation();
+   }
+
+    // Method to show export confirmation message
+    private void showExportConfirmation() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Export Successful");
+        alert.setHeaderText(null);
+        alert.setContentText("Transactions exported successfully!");
+        alert.showAndWait();
+    }
 
     // Method to reload transactions from file
     public void reloadTransactionsFromFile() {
