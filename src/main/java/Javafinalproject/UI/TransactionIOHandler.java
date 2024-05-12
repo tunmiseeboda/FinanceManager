@@ -15,6 +15,11 @@ public class TransactionIOHandler {
         //open a file chooser dialog to select the export file location
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Export Transactions");
+
+        // Set the initial filename
+        String defaultFileName = "transactions.csv";
+        fileChooser.setInitialFileName(defaultFileName);
+
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("CSV Files", "*.csv")
         );
